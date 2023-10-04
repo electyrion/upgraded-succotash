@@ -4,6 +4,10 @@ use (
 	./project/publisher
 	./project/subscriber
 	./project/utils
+	./project/tcp/server
+	./project/tcp/client
+	./project/udp/server
+	./project/udp/client
 	./samples/codec
 	./samples/quic/client
 	./samples/quic/server
