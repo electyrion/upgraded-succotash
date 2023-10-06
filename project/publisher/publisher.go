@@ -1,10 +1,9 @@
 package main
 
-// CLIENT
+// CLIENT, NODE CONTROL
 
 import (
 	"fmt"
-	"bufio"
     "context"
     "crypto/tls"
     "log"
@@ -17,7 +16,7 @@ import (
 )
 
 const (
-    serverIP          = "34.171.103.191"
+    serverIP          = "127.0.0.1"
     serverPort        = "9906"
     serverType        = "udp4"
     bufferSize        = 2048
@@ -69,7 +68,8 @@ func main() {
 		Destination: destination,
 	}
 	resultA := utils.Encoder(packetA)
-	// fmt.Println(resultA)
+	fmt.Println("halo")
+	fmt.Println(resultA)
 	// fmt.Println(utils.Decoder(resultA))
 
 
@@ -88,10 +88,8 @@ func main() {
 		Destination: destination,
 	}
 	resultB := utils.Encoder(packetB)
-	// fmt.Println(resultB)
+	fmt.Println(resultB)
 	// fmt.Println(utils.Decoder(resultB))
-
-
 
 	streamA, err := connection.OpenStreamSync(context.Background())
 	if err != nil {
@@ -106,22 +104,22 @@ func main() {
 	fmt.Printf("[quic] Opened bidirectional stream %d to %s\n", streamB.StreamID(), connection.RemoteAddr())
 
 	go func() {
-		fmt.Printf("[quic] [Stream ID: %d] Sending message '%s'\n", streamA.StreamID(), resultA)
+		fmt.Printf("[quic] [Stream ID: %d] Sending packet..'\n", streamA.StreamID())
 		_, err = streamA.Write([]byte(resultA))
 		if err != nil {
 			log.Fatalln(err)
 		}
 		fmt.Printf("[quic] [Stream ID: %d] Message sent\n", streamA.StreamID())
-	}
+	}()
 
 	go func() {
-		fmt.Printf("[quic] [Stream ID: %d] Sending message '%s'\n", streamB.StreamID(), resultB)
+		fmt.Printf("[quic] [Stream ID: %d] Sending packet to server..'\n", streamB.StreamID())
 		_, err = streamB.Write([]byte(resultB))
 		if err != nil {
 			log.Fatalln(err)
 		}
 		fmt.Printf("[quic] [Stream ID: %d] Message sent\n", streamB.StreamID())
-	}
+	}()
 
 	// capture message packetA from server
 	receiveLength, err := streamA.Read(receiveBuffer)
@@ -131,7 +129,8 @@ func main() {
 	fmt.Printf("[quic] [Stream ID: %d] Received %d bytes of message from server\n", streamA.StreamID(), receiveLength)
 
 	response := receiveBuffer[:receiveLength]
-	fmt.Printf("[quic] [Stream ID: %d] Received message: '%s'\n", streamA.StreamID(), response)
+	receivedMessage := utils.Decoder(response)
+	fmt.Printf("[quic] [Stream ID: %d] Received packet: '%s'\n", streamA.StreamID(), receivedMessage)
 
 
 	// capture message packetB from server
@@ -142,5 +141,6 @@ func main() {
 	fmt.Printf("[quic] [Stream ID: %d] Received %d bytes of message from server\n", streamB.StreamID(), receiveLength)
 
 	response = receiveBuffer[:receiveLength]
-	fmt.Printf("[quic] [Stream ID: %d] Received message: '%s'\n", streamB.StreamID(), response)
+	receivedMessage = utils.Decoder(response)
+	fmt.Printf("[quic] [Stream ID: %d] Received packet: '%s'\n", streamB.StreamID(), receivedMessage)
 }

@@ -11,19 +11,20 @@ import (
 	"io"
 	"log"
 	"math/big"
+	"encoding/binary"
 )
 
 // Tipe data komponen boleh diubah, namun variabelnya jangan diubah
 type LRTPIDSPacketFixed struct {
-	TransactionId     any
-	IsAck             any
-	IsNewTrain        any
-	IsUpdateTrain     any
-	IsDeleteTrain     any
-	IsTrainArriving   any
-	IsTrainDeparting  any
-	TrainNumber       any
-	DestinationLength any
+	TransactionId     uint16
+	IsAck             bool
+	IsNewTrain        bool
+	IsUpdateTrain     bool
+	IsDeleteTrain     bool
+	IsTrainArriving   bool
+	IsTrainDeparting  bool
+	TrainNumber       uint16
+	DestinationLength uint8
 }
 
 type LRTPIDSPacket struct {
@@ -46,10 +47,13 @@ func Decoder(rawMessage []byte) LRTPIDSPacket {
 	bytesReader := bytes.NewReader(rawMessage)
 	binary.Read(bytesReader, binary.BigEndian, &decodedFixedSegment)
 
-	decodedMessage := make([]byte, decodedFixedSegment.DestinationLength)
-	bytesReader.Read(decodedMessage)
+	destinationStringRaw := make([]byte, decodedFixedSegment.DestinationLength)
+	bytesReader.Read(destinationStringRaw)
 
-	return decodedFixedSegment
+	return LRTPIDSPacket {
+		LRTPIDSPacketFixed: decodedFixedSegment,
+		Destination: string(destinationStringRaw),	
+	}
 }
 
 

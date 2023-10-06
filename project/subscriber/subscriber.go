@@ -1,6 +1,6 @@
 package main
 
-// SERVER
+// SERVER, PIDS
 
 import (
 	"fmt"
@@ -9,7 +9,6 @@ import (
     "io"
     "log"
     "net"
-    "strings"
 
     "github.com/quic-go/quic-go"
 
@@ -25,17 +24,15 @@ const (
 )
 
 func Handler(packet utils.LRTPIDSPacket) string {
-
-	// define a string variable
 	var result string
 
-	if packet.LRTPIDSPacketFixed.IsTrainArriving {
+	if (packet.LRTPIDSPacketFixed.IsTrainArriving) {
 		result = "Mohon perhatian, kereta tujuan " + string(packet.Destination) + " akan tiba di Peron 1"
-	} else if packet.LRTPIDSPacketFixed.IsTrainDeparting {
+	} else if (packet.LRTPIDSPacketFixed.IsTrainDeparting) {
 		result = "Mohon perhatian, kereta tujuan " + string(packet.Destination) + " akan diberangkatkan dari Peron 1"
 	}
 	
-	return "KOSONG???"
+	return result
 }
 
 func main() {
@@ -74,25 +71,6 @@ func main() {
 
 		go handleConnection(connection)
 	}
-	
-	// destination := "Dukuh Atas"
-	// packet := utils.LRTPIDSPacket{
-	// 	LRTPIDSPacketFixed: utils.LRTPIDSPacketFixed{
-	// 		TransactionId:     0x55,
-	// 		IsAck:             false,
-	// 		IsNewTrain:        false,
-	// 		IsUpdateTrain:     false,
-	// 		IsDeleteTrain:     false,
-	// 		IsTrainArriving:   false,
-	// 		IsTrainDeparting:  true,
-	// 		TrainNumber:       1000,
-	// 		DestinationLength: uint8(len(destination)),
-	// 	},
-	// 	Destination: destination,
-	// }
-	// result := utils.Encoder(packet)
-	// fmt.Println(result)
-	// fmt.Println(utils.Decoder(result))
 }
 
 func handleConnection(connection quic.Connection) {
@@ -124,10 +102,13 @@ type logicProcessorAndWriter struct { io.Writer }
 
 func (lw logicProcessorAndWriter) Write(receivedMessageRaw []byte) (int, error) {
 	receivedMessage := utils.Decoder(receivedMessageRaw)
-	fmt.Printf("[quic] Receive message: %s\n", receivedMessage)
+	fmt.Printf("[quic] Receive Packet: %s\n", receivedMessage)
 
 	response := Handler(receivedMessage)
-	writeLength, err := lw.Writer.Write([]byte(response))
+
+	receivedMessage.LRTPIDSPacketFixed.IsAck = true
+	responseMessage := utils.Encoder(receivedMessage)
+	writeLength, err := lw.Writer.Write([]byte(responseMessage))
 
 	fmt.Printf("[quic] Send message: %s\n", response)
 
