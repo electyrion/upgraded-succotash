@@ -102,7 +102,7 @@ type logicProcessorAndWriter struct { io.Writer }
 
 func (lw logicProcessorAndWriter) Write(receivedMessageRaw []byte) (int, error) {
 	receivedMessage := utils.Decoder(receivedMessageRaw)
-	fmt.Printf("[quic] Receive Packet: %s\n", receivedMessage)
+	fmt.Printf("[quic] Receive Packet: %+v\n", receivedMessage)
 
 	response := Handler(receivedMessage)
 
