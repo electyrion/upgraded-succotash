@@ -130,7 +130,7 @@ func main() {
 
 	response := receiveBuffer[:receiveLength]
 	receivedMessage := utils.Decoder(response)
-	fmt.Printf("[quic] [Stream ID: %d] Received packet: '%s'\n", streamA.StreamID(), receivedMessage)
+	fmt.Printf("[quic] [Stream ID: %d] Received packet: '%+v'\n", streamA.StreamID(), receivedMessage)
 
 
 	// capture message packetB from server
@@ -142,5 +142,5 @@ func main() {
 
 	response = receiveBuffer[:receiveLength]
 	receivedMessage = utils.Decoder(response)
-	fmt.Printf("[quic] [Stream ID: %d] Received packet: '%s'\n", streamB.StreamID(), receivedMessage)
+	fmt.Printf("[quic] [Stream ID: %d] Received packet: '%+v'\n", streamB.StreamID(), receivedMessage)
 }
