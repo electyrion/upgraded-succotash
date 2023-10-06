@@ -1,6 +1,6 @@
 package main
 
-// CLIENT, NODE CONTROL
+// CLIENT, NODE CONTROL, VM1
 
 import (
 	"fmt"

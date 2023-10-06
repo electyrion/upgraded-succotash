@@ -1,6 +1,6 @@
 package main
 
-// SERVER, PIDS
+// SERVER, PIDS, VM2
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ import (
 )
 
 const (
-    serverIP      = "34.139.83.160"
+    serverIP      = ""
     serverPort    = "9906"
     serverType    = "udp4"
     bufferSize    = 2048
