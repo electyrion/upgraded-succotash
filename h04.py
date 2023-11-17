@@ -26,8 +26,8 @@ class MyTopo (Topo) :
         DG_ROUTER_RS = '192.168.138.122/30'
         
         # initiate router
-        router_asrama = self.addNode("Router Asrama", cls=LinuxRouter, ip=DG_KOAS, defaultRoute=f'via {DG_ROUTER_RS[:-3]}')
-        router_rs = self.addNode("Router Rumah Sakit", cls=LinuxRouter, ip=DG_SPESIALIS, defaultRoute=f"via {DG_ROUTER_ASRAMA[:-3]}")
+        router_asrama = self.addNode('r01', cls=LinuxRouter, ip=DG_ROUTER_ASRAMA)
+        router_rs = self.addNode('r02', cls=LinuxRouter, ip=DG_ROUTER_RS)
 
         #add 2 switch
         s1 = self.addswitch('S1')
