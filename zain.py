@@ -15,12 +15,12 @@ class LinuxRouter(Node):
 
 class MyTopo(Topo):
     def build(self):
-        default_gateway_koas = '192.168.250.1/26'
-        default_gateway_internship = '192.168.250.65/27'
-        default_gateway_spesialis = '192.168.250.97/28'
-        default_gateway_residen = '192.168.250.113/29'
-        default_gateway_router_1 = '192.168.250.121/30'
-        default_gateway_router_2 = '192.168.250.122/30'
+        default_gateway_koas = '192.168.138.1/26'
+        default_gateway_internship = '192.168.138.65/27'
+        default_gateway_spesialis = '192.168.138.97/28'
+        default_gateway_residen = '192.168.138.113/29'
+        default_gateway_router_1 = '192.168.138.121/30'
+        default_gateway_router_2 = '192.168.138.122/30'
 
         #add router
         # r01 = Asrama
@@ -52,7 +52,7 @@ class MyTopo(Topo):
         #add host (subnet koas)
         for i in range(61):
             host_name = 'K' + str(i+1)
-            ip_addr = '192.168.250.' + str(i+2) + '/26'
+            ip_addr = '192.168.138.' + str(i+2) + '/26'
             self.addHost(host_name, ip=ip_addr, defaultRoute='via ' + default_gateway_koas[:-3])
             self.addLink(host_name, s1)
 
@@ -60,21 +60,21 @@ class MyTopo(Topo):
         #add host (subnet internship)
         for i in range(29):
             host_name = 'I' + str(i+1)
-            ip_addr = '192.168.250.' + str(i+66) + '/27'
+            ip_addr = '192.168.138.' + str(i+66) + '/27'
             self.addHost(host_name, ip=ip_addr, defaultRoute='via ' + default_gateway_internship[:-3])
             self.addLink(host_name, s2)
 
         #add host (subnet spesialis)
         for i in range(13):
             host_name = 'S' + str(i+1)
-            ip_addr = '192.168.250.' + str(i+98) + '/28'
+            ip_addr = '192.168.138.' + str(i+98) + '/28'
             self.addHost(host_name, ip=ip_addr, defaultRoute='via ' + default_gateway_spesialis[:-3])
             self.addLink(host_name, s3)
 
         #add host (subnet residen)
         for i in range(5):
             host_name = 'R' + str(i+1)
-            ip_addr = '192.168.250.' + str(i+114) + '/29'   
+            ip_addr = '192.168.138.' + str(i+114) + '/29'   
             self.addHost(host_name, ip=ip_addr, defaultRoute='via ' + default_gateway_residen[:-3])
             self.addLink(host_name, s4)
 
